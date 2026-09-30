@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOPUPZONE — Game Top Up</title>
+<meta name="description" content="TOPUPZONE game top-up store">
+<style>
+:root{
+  --blue:#0878ff; --blue2:#0047b3; --dark:#06152f; --card:#ffffff;
+  --text:#10213f; --muted:#6b7890; --line:#dce7f7; --green:#16a34a;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#020b2e,#041b52 45%,#063b86);color:#eef6ff;min-height:100vh}
+header{position:sticky;top:0;z-index:20;background:linear-gradient(100deg,#0057d9,#09f);color:#fff;box-shadow:0 4px 18px #003b8060}
+.nav{max-width:1150px;margin:auto;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.logo{font-size:25px;font-weight:900;letter-spacing:1px}
+.logo span{color:#bfe4ff}
+.btn{border:0;border-radius:12px;padding:11px 15px;font-weight:800;cursor:pointer}
+.adminBtn{background:#fff;color:#0057d9}
+.hero{max-width:1150px;margin:24px auto 10px;padding:28px 18px}
+.heroBox{background:linear-gradient(135deg,#003f9e,#0789ff);color:white;border-radius:25px;padding:35px 28px;box-shadow:0 18px 40px #0068d43d}
+.hero h1{margin:0 0 10px;font-size:clamp(32px,7vw,58px)}
+.hero p{margin:0;max-width:650px;color:#dceeff;font-size:16px;line-height:1.6}
+.container{max-width:1150px;margin:auto;padding:10px 18px 45px}
+.sectionTitle{font-size:25px;margin:20px 0 14px;color:#d8ecff}
+.games{display:block}.gameSelector{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:18px}.gameTab{aspect-ratio:1/1;border:2px solid #1d5fb8;background:linear-gradient(145deg,#08265a,#0b397d);border-radius:10px;padding:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;font-weight:900;color:#fff;box-shadow:0 7px 18px #0b4d8b18;transition:.2s;text-align:center}.gameTab:hover{transform:translateY(-2px);border-color:#6db5ff}.gameTab.active{background:linear-gradient(135deg,#0063df,#00a2ff);color:#fff;border-color:#0063df;box-shadow:0 10px 22px #0063df45}.gameTab img{width:58px;height:58px;border-radius:10px;object-fit:cover;background:#eef6ff}.tabIcon{width:58px;height:58px;border-radius:10px;background:#eef6ff;display:grid;place-items:center;font-size:28px}.selectedGame{max-width:650px;margin:auto;box-shadow:0 14px 35px #0b4d8b2c}
+.game{background:#f8fbff;border-radius:20px;overflow:hidden;box-shadow:0 10px 28px #0b4d8b22;border:1px solid #d8e9ff}
+.banner{height:145px;background:#0b65d8;position:relative;overflow:hidden}
+.banner img{width:100%;height:100%;object-fit:cover;display:block}
+.bannerFallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:29px;font-weight:900;color:white;background:linear-gradient(135deg,#075bd2,#12a7ff)}
+.gameBody{padding:16px}
+.gameTop{display:flex;align-items:center;gap:10px}
+.gameLogo{width:44px;height:44px;border-radius:12px;object-fit:cover;border:2px solid #dcecff}
+.game h3{margin:0;font-size:18px}
+.game small{color:var(--muted)}
+.packages{margin-top:14px;display:grid;gap:9px}
+.package{border:1px solid var(--line);border-radius:12px;padding:11px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.package b{color:#075dcc}
+.buy{background:#075dcc;color:white;padding:8px 11px;border-radius:9px;font-size:12px}
+.notice{margin:20px 0;background:#0a2c61;border:1px solid #ffe08a;padding:13px;border-radius:13px;color:#d7e9ff;font-size:13px}
+.floatingNames{position:fixed;left:50%;top:92px;transform:translateX(-50%);width:min(92vw,520px);height:58px;pointer-events:none;z-index:25;display:flex;align-items:center;justify-content:center}
+.floatName{position:absolute;top:0;padding:11px 20px;border:1px solid #65b7ff;border-radius:999px;background:linear-gradient(135deg,#06357c,#0878ff);color:#fff;font-weight:900;font-size:13px;letter-spacing:.5px;box-shadow:0 8px 24px #0007;white-space:nowrap;z-index:26;animation:popName 2s ease-out forwards}
+@keyframes popName{0%{opacity:0;transform:translateY(12px) scale(.72)}45%{opacity:1;transform:translateY(0) scale(1.05)}70%{transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-10px) scale(.98)}}
+.liveMemberBar{max-width:1150px;margin:10px auto 0;padding:0 18px;display:flex;justify-content:center}
+.liveMemberInner{width:100%;max-width:650px;background:linear-gradient(90deg,#03265d,#0758b8,#03265d);border:1px solid #2f91ff;border-radius:999px;padding:8px 16px;color:#e9f5ff;font-size:12px;font-weight:900;text-align:center;box-shadow:0 7px 20px #0003}
+.liveDot{display:inline-block;width:8px;height:8px;background:#39ff88;border-radius:50%;margin-right:6px;box-shadow:0 0 10px #39ff88;animation:pulseLive 1.3s infinite}
+@keyframes pulseLive{50%{opacity:.35;transform:scale(.8)}}
+.activeBanner{width:100%;overflow:hidden;background:#021c4b;border-bottom:1px solid #2b8cff;color:#dff2ff;height:32px;display:flex;align-items:center;white-space:nowrap}
+.activeBannerTrack{display:inline-block;padding-left:100%;animation:activeMove 11s linear infinite;font-weight:900;font-size:12px;letter-spacing:.6px}
+@keyframes activeMove{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+.greeting{max-width:1150px;margin:18px auto 0;padding:0 18px;color:#d9ecff;font-weight:800;font-size:15px}
+footer{background:#04132c;color:#bcd0ed;padding:25px 18px;text-align:center;font-size:13px}
+.modal{display:none;position:fixed;inset:0;background:#00132dcc;z-index:100;align-items:center;justify-content:center;padding:15px}
+.modal.open{display:flex}
+.panel{background:#fff;width:min(850px,100%);max-height:92vh;overflow:auto;border-radius:20px;padding:20px}
+.panelHead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.close{background:#eef4fb;color:#18385e}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd9eb;border-radius:10px;margin-top:6px}
+label{font-size:13px;font-weight:800;display:block;margin-top:13px}
+.adminGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:15px}
+.adminGame{border:1px solid #dbe6f3;border-radius:15px;padding:14px;margin-top:15px}
+.save{background:#0878ff;color:white;margin-top:18px}
+.danger{background:#fee2e2;color:#991b1b}
+.hidden{display:none}
+@media(max-width:600px){.nav{padding:13px}.hero{padding:18px}.heroBox{padding:27px 20px}.banner{height:125px}}
+
+.adminLockWrap{margin-top:12px}
+.adminLock{width:24px;height:24px;border:1px solid #36557e;border-radius:50%;background:#0b2347;color:#9fc8f7;cursor:pointer;font-size:11px;padding:0}
+.adminLock:hover{background:#0b4d92;color:#fff}
+.modal{display:none;position:fixed;inset:0;background:#00132dcc;z-index:100;align-items:center;justify-content:center;padding:15px}
+.modal.open{display:flex}
+.panel{background:#fff;color:#10213f;width:min(900px,100%);max-height:92vh;overflow:auto;border-radius:20px;padding:0}
+.adminHeader{background:linear-gradient(135deg,#042d68,#0878ff);color:#fff;padding:20px}
+.adminHeader h2{margin:0 0 5px}
+.adminHeader p{margin:0;color:#d9edff;font-size:12px}
+.panelBody{padding:18px}
+.adminSection{border:1px solid #dce8f6;border-radius:14px;padding:15px;margin-bottom:15px;background:#fbfdff}
+.adminSection h3{margin:0 0 5px;color:#0a4389}
+.adminGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.adminGame{border:1px solid #dbe6f3;border-radius:14px;padding:13px;margin-top:12px}
+.adminGame h4{margin:0 0 8px;color:#075dcc}
+.adminGamePack{border-top:1px solid #e6edf7;margin-top:10px;padding-top:8px}
+.adminLabel{display:block;font-size:12px;font-weight:800;margin-top:8px;color:#29496e}
+.adminInput{width:100%;padding:10px;border:1px solid #cbd9eb;border-radius:9px;margin-top:4px}
+.adminBtnRow{display:flex;gap:9px;flex-wrap:wrap}
+.adminBtnSave{background:#0878ff;color:#fff;border:0;border-radius:10px;padding:11px 14px;font-weight:800;cursor:pointer}
+.adminBtnClose{background:#eef4fb;color:#18385e;border:0;border-radius:10px;padding:9px 12px;font-weight:800;cursor:pointer}
+.adminBtnReset{background:#fee2e2;color:#991b1b;border:0;border-radius:10px;padding:11px 14px;font-weight:800;cursor:pointer}
+.loginBox{padding:8px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="activeBanner"><div class="activeBannerTrack">🔵 TOPUPZONE • ALWAYS ACTIVE 24/7 • FAST GAME TOP-UPS • ROBLOX • FREE FIRE • BLOOD STRIKE • CALL OF DUTY MOBILE • 🔵</div></div>
+  <div class="nav">
+    <div class="logo">TOPUP<span>ZONE</span></div>
+    <div style="font-size:12px;opacity:.9">Secure game top-up store</div>
+  </div>
+</header>
+<div class="greeting">👋 Welcome to TOPUPZONE! Hello gamer, choose your game below and get your top-up.</div>
+<div class="liveMemberBar"><div class="liveMemberInner"><span class="liveDot"></span>LIVE MEMBERS • <span id="memberCount">1,248</span> online now</div></div>
+
+<section class="hero">
+  <div class="heroBox">
+    <h1>TOPUPZONE</h1>
+    <p>Fast and simple game top-ups. Choose a game, select a package and contact the store to complete your order.</p>
+  </div>
+</section>
+
+<main class="container">
+  <h2 class="sectionTitle">🎮 Choose Your Game</h2><p style="margin-top:-5px;color:#b7d2f2">Tap a game below to view its top-up packages.</p>
+  <div id="games" class="games"></div>
+
+  <div class="notice">
+    <b>Payment:</b> Use the bank details shown by the store owner before paying. Always confirm the account name and amount before transfer.
+  </div>
+
+
+</main>
+
+<div id="floatingNames" class="floatingNames"></div>
+
+<footer>
+  © <span id="year"></span> TOPUPZONE • Game top-up storefront
+  <div class="adminLockWrap"><button class="adminLock" onclick="openAdmin()" aria-label="Open admin">🔒</button></div>
+</footer>
+
+<div id="adminModal" class="modal">
+  <div class="panel">
+    <div class="adminHeader">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+        <div><h2>TOPUPZONE Control Center</h2><p>Edit game prices, package names, logos and banners.</p></div>
+        <button class="adminBtnClose" onclick="closeAdmin()">✕</button>
+      </div>
+    </div>
+    <div class="panelBody">
+      <div id="adminLogin" class="adminSection loginBox">
+        <h3>🔐 Admin Login</h3>
+        <label class="adminLabel">Username</label>
+        <input id="adminUser" class="adminInput" autocomplete="username" placeholder="Username">
+        <label class="adminLabel">Password</label>
+        <input id="adminPass" class="adminInput" type="password" autocomplete="current-password" placeholder="Password">
+        <button class="adminBtnSave" style="margin-top:12px" onclick="adminLogin()">Login</button>
+      </div>
+      <div id="adminContent" class="hidden">
+        <div class="adminSection"><h3>🏦 Payment & Contact</h3>
+          <div class="adminGrid">
+            <div><label class="adminLabel">Bank name</label><input id="bankName" class="adminInput"></div>
+            <div><label class="adminLabel">Account number</label><input id="accountNumber" class="adminInput"></div>
+            <div><label class="adminLabel">Account name</label><input id="accountName" class="adminInput"></div>
+            <div><label class="adminLabel">WhatsApp number</label><input id="whatsapp" class="adminInput" placeholder="2348012345678"></div>
+          </div>
+        </div>
+        <div class="adminSection"><h3>🎮 Games & Prices</h3><div id="adminGames"></div></div>
+        <div class="adminBtnRow">
+          <button class="adminBtnSave" onclick="saveAdmin()">💾 Save Changes</button>
+          <button class="adminBtnReset" onclick="resetDemo()">Reset Demo Data</button>
+        </div>
+        <p style="font-size:11px;color:#68778c">This is a static GitHub Pages admin panel. The login is a front-end lock, not a secure server-side authentication system.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_USERNAME = "venom";
+const ADMIN_PASSWORD = "venom1";
+
+const defaultGames = [
+ {id:"freefire",name:"Free Fire",currency:"Diamonds",logo:"https://upload.wikimedia.org/wikipedia/commons/8/8d/Freefirelogo.png",banner:"",packs:[["110 Diamonds",1460],["231 Diamonds",3000],["583 Diamonds",7600],["1188 Diamonds",15500],["2420 Diamonds",31000],["5060 Diamonds",62000]]},
+ {id:"roblox",name:"Roblox",currency:"Robux",logo:"https://upload.wikimedia.org/wikipedia/commons/8/8a/Roblox_2022_Logo.png",banner:"",packs:[["80 Robux",1500],["400 Robux",6500],["800 Robux",12500],["1700 Robux",25000],["4500 Robux",65000]]},
+ {id:"bloodstrike",name:"Blood Strike",currency:"Gold",logo:"https://cdn.akamai.steamstatic.com/steam/apps/3199170/library_600x900.jpg",banner:"",packs:[["100 Gold",1400],["300 Gold",2500],["500 Gold",3800],["1000 Gold",7600],["2000 Gold",15000]]},
+ {id:"codm",name:"Call of Duty Mobile",currency:"CP",logo:"https://upload.wikimedia.org/wikipedia/commons/3/3b/Call_of_Duty_Mobile_2023_Logo.png",banner:"",packs:[["88 CP",1650],["460 CP",5330],["960 CP",10725],["2600 CP",26650],["5400 CP",53625],["11600 CP",165000]]},
+ {id:"deltaforce",name:"Delta Force",currency:"Delta Coins",logo:"",banner:"",packs:[["100 Delta Coins",1500],["300 Delta Coins",4000],["600 Delta Coins",7500],["1200 Delta Coins",14500],["2500 Delta Coins",29000]]},
+ {id:"dls",name:"Dream League Soccer",currency:"Coins",logo:"",banner:"",packs:[["500 Coins",1500],["1200 Coins",3000],["2500 Coins",5500],["5000 Coins",10000],["10000 Coins",19000]]},
+ {id:"efootball",name:"eFootball",currency:"Coins",logo:"",banner:"",packs:[["130 Coins",1800],["550 Coins",6500],["1040 Coins",12000],["2130 Coins",24000],["3250 Coins",36000]]},
+ {id:"fcmobile",name:"FC Mobile",currency:"FC Points",logo:"",banner:"",packs:[["100 FC Points",1800],["520 FC Points",7500],["1050 FC Points",14500],["2200 FC Points",29000],["5750 FC Points",70000]]}
+];
+
+const boyNames=["FF MOLE","DAVIS","DAVE","DARKLORD","David","Daniel","Samuel","Ibrahim","Tobi","Emeka","Michael","Joshua","Chinedu","Abdul","Yusuf","Victor","Henry","Oluwatobi","Femi","Musa","Ebuka","Ikenna","Kelechi","Ahmed","Peter","Paul","Bright","Kelvin","Wisdom","Collins","Desmond","Godwin","Anthony","Frank","Nathan","Elijah","Isaac","Joseph","Benjamin","Emmanuel","Gabriel","Olamide"];
+
+function loadData(){
+  try{
+    const saved=JSON.parse(localStorage.getItem("topupzoneData"));
+    if(saved && saved.games){
+      const allowed=new Set(defaultGames.map(g=>g.id));
+      const games=defaultGames.map(def=>{ const old=saved.games.find(g=>g.id===def.id); return old ? {...def,...old} : def; });
+      return {...saved,games:games.filter(g=>allowed.has(g.id))};
+    }
+    return {games:defaultGames,bank:{name:"",number:"",account:"",whatsapp:""}};
+  }catch(e){ return {games:defaultGames,bank:{name:"",number:"",account:"",whatsapp:""}}; }
+}
+let data=loadData();
+
+function money(n){return "₦"+Number(n).toLocaleString("en-NG");}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+
+function render(){
+  const gamesEl=document.getElementById("games");
+  gamesEl.innerHTML=`
+    <div class="gameSelector">
+      ${data.games.map((g,i)=>`
+        <button class="gameTab ${i===0?"active":""}" onclick="selectGame('${g.id}')">
+          ${g.logo ? `<img src="${escapeHtml(g.logo)}" onerror="this.style.display='none'">` : `<span class="tabIcon">🎮</span>`}
+          <span>${escapeHtml(g.name)}</span>
+        </button>`).join("")}
+    </div>
+    <div id="selectedGame"></div>`;
+
+  selectGame(data.games[0].id);
+
+  startFloatingNames();
+  document.getElementById("year").textContent=new Date().getFullYear();
+}
+
+const customerNames=[
+"Alexander Wright","Maya Lin","Julian Vance","Elena Rostova","Mateo Silva","Chloe Bennett","Liam O'Connor","Amara Okafor","Samuel Vance","Nina Chen","Marcus Holloway","Sophia Al-Mansoor","Lucas Thorne","Freya Lindqvist","Ethan Ramirez","Layla Haddad","Oliver Sterling","Zoe Patel","Gabriel Mercer","Isla MacLeod","Noah Santos","Aria Montgomery","Benjamin Cole","Hannah Dubois","Caleb Finch","Naomi Takahashi","Daniel Cross","Nora Petrov","Sebastian Ruiz","Eva Lindholm","Xavier Brooks","Lily Kim","Owen Gallagher","Penelope Vance","Isaac Hayes","Camilla Rossi","Henry Sinclair","Jasmine Patel","Leo Fischer","Grace Kelly","Felix Tanaka","Victoria Vance","Julian Hayes","Maya Angelou","Asher Reed","Clara Delgado","Thomas Wayne","Naomi Scott","Adrian Blake","Ruby Henderson","FF MOLE","DAVIS","DAVE","DARKLORD","DOUGLASS"
+];
+const topupActivities=["Free Fire • Diamonds","Roblox • Robux","Blood Strike • Gold","COD Mobile • CP","Delta Force • Delta Coins","DLS • Coins","eFootball • Coins","FC Mobile • FC Points"];
+let floatingTimer=null;
+function shuffledNames(){
+  const a=[...customerNames];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+let mixedNames=shuffledNames();
+function startFloatingNames(){
+  const box=document.getElementById("floatingNames");
+  if(!box)return;
+  box.innerHTML="";
+  if(floatingTimer)clearInterval(floatingTimer);
+  let index=0;
+  const launch=()=>{
+    if(index>=mixedNames.length){mixedNames=shuffledNames();index=0;}
+    const name=mixedNames[index++];
+    const activity=topupActivities[Math.floor(Math.random()*topupActivities.length)];
+    spawnName(`${name} • ${activity}`);
+  };
+  launch();
+  floatingTimer=setInterval(launch,10000);
+}
+function spawnName(name){
+  const box=document.getElementById("floatingNames");
+  if(!box)return;
+  box.querySelectorAll(".floatName").forEach(el=>el.remove());
+  const el=document.createElement("div");
+  el.className="floatName";
+  el.textContent=name;
+  box.appendChild(el);
+  setTimeout(()=>el.remove(),2100);
+}
+
+function startMemberCounter(){
+  const el=document.getElementById("memberCount");
+  if(!el)return;
+  let count=1248;
+  setInterval(()=>{
+    count=Math.max(1200,count + (Math.random()<.5?-1:1)*Math.floor(Math.random()*4+1));
+    el.textContent=count.toLocaleString("en-NG");
+  },5000);
+}
+
+function selectGame(id){
+  const g=data.games.find(x=>x.id===id);
+  if(!g)return;
+
+  document.querySelectorAll(".gameTab").forEach((el,i)=>{
+    el.classList.toggle("active",data.games[i].id===id);
+  });
+
+  document.getElementById("selectedGame").innerHTML=`
+    <article class="game selectedGame">
+      <div class="banner">
+        ${g.banner ? `<img src="${escapeHtml(g.banner)}" alt="${escapeHtml(g.name)} banner" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : ""}
+        <div class="bannerFallback" ${g.banner?"style='display:none'":""}>${escapeHtml(g.name)}</div>
+      </div>
+      <div class="gameBody">
+        <div class="gameTop">
+          ${g.logo ? `<img class="gameLogo" src="${escapeHtml(g.logo)}" alt="">` : `<div class="gameLogo bannerFallback">🎮</div>`}
+          <div><h3>${escapeHtml(g.name)}</h3><small>${escapeHtml(g.currency)} top up</small></div>
+        </div>
+        <div class="packages">
+          ${g.packs.map(p=>`
+            <div class="package">
+              <div><b>${escapeHtml(p[0])}</b><br><small>${money(p[1])}</small></div>
+              <button class="btn buy" onclick="order('${escapeHtml(g.name)}','${escapeHtml(p[0])}',${Number(p[1])})">ORDER</button>
+            </div>`).join("")}
+        </div>
+      </div>
+    </article>`;
+}
+
+function order(game,pack,price){
+  const w=data.bank.whatsapp || "";
+  const msg=`Hello TOPUPZONE, I want to order ${pack} for ${game}. Price: ${money(price)}.`;
+  if(w) window.open(`https://wa.me/${w}?text=${encodeURIComponent(msg)}`,"_blank");
+  else alert(msg+"\n\nAdmin has not added a WhatsApp number yet.");
+}
+
+function openAdmin(){document.getElementById("adminModal").classList.add("open");document.getElementById("adminLogin").classList.remove("hidden");document.getElementById("adminContent").classList.add("hidden");document.getElementById("adminUser").value="";document.getElementById("adminPass").value="";}
+function closeAdmin(){document.getElementById("adminModal").classList.remove("open");}
+function adminLogin(){
+  const u=document.getElementById("adminUser").value.trim();
+  const p=document.getElementById("adminPass").value;
+  if(u===ADMIN_USERNAME && p===ADMIN_PASSWORD){
+    document.getElementById("adminLogin").classList.add("hidden");
+    document.getElementById("adminContent").classList.remove("hidden");
+    renderAdmin();
+  }else alert("Incorrect username or password.");
+}
+function renderAdmin(){
+  document.getElementById("bankName").value=data.bank?.name||"";
+  document.getElementById("accountNumber").value=data.bank?.number||"";
+  document.getElementById("accountName").value=data.bank?.account||"";
+  document.getElementById("whatsapp").value=data.bank?.whatsapp||"";
+  document.getElementById("adminGames").innerHTML=data.games.map((g,gi)=>`
+    <div class="adminGame">
+      <h4>${escapeHtml(g.name)}</h4>
+      <label class="adminLabel">Game logo URL</label><input class="adminInput" data-gi="${gi}" data-field="logo" value="${escapeHtml(g.logo||"")}">
+      <label class="adminLabel">Game banner URL</label><input class="adminInput" data-gi="${gi}" data-field="banner" value="${escapeHtml(g.banner||"")}">
+      ${g.packs.map((p,pi)=>`<div class="adminGamePack"><div class="adminGrid"><div><label class="adminLabel">Package ${pi+1}</label><input class="adminInput" data-gi="${gi}" data-pi="${pi}" data-field="name" value="${escapeHtml(p[0])}"></div><div><label class="adminLabel">Price (₦)</label><input class="adminInput" data-gi="${gi}" data-pi="${pi}" data-field="price" type="number" min="0" value="${Number(p[1])}"></div></div></div>`).join("")}
+    </div>`).join("");
+}
+function saveAdmin(){
+  data.bank={name:document.getElementById("bankName").value,number:document.getElementById("accountNumber").value,account:document.getElementById("accountName").value,whatsapp:document.getElementById("whatsapp").value};
+  document.querySelectorAll("#adminGames input").forEach(el=>{
+    const gi=Number(el.dataset.gi),field=el.dataset.field;
+    if(field==="logo"||field==="banner")data.games[gi][field]=el.value.trim();
+    else if(field==="name")data.games[gi].packs[Number(el.dataset.pi)][0]=el.value.trim();
+    else if(field==="price")data.games[gi].packs[Number(el.dataset.pi)][1]=Number(el.value)||0;
+  });
+  localStorage.setItem("topupzoneData",JSON.stringify(data));
+  render();
+  alert("Changes saved successfully.");
+  closeAdmin();
+}
+function resetDemo(){
+  if(confirm("Reset all games, prices and payment details to the demo values?")){localStorage.removeItem("topupzoneData");data=loadData();render();closeAdmin();}
+}
+
+render();
+startMemberCounter();
+</script>
+</body>
+</html>
